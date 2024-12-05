@@ -131,6 +131,8 @@ const ERC20ABI = [
   "function transferFrom(address from, address to, uint256 amount) returns (bool)"
 ];
 
+export const memberbeatABI = contractABI;
+
 /**
  * Creates a Memberbeat contract instance.
  * @param {string} contractAddress - The contract address.
@@ -604,6 +606,23 @@ export const createMemberbeat = async (contractAddress, signer) => {
     }
   };
 
+  /**
+  * Removes a token price feed.
+  * @param {string} tokenAddress - The token address.  
+  * @returns {Promise<Object>} The result of the transaction.
+  * @throws Will throw an error if removing the token price feed fails.
+  */
+  const deleteTokenPriceFeed = async (tokenAddress) => {
+    try {      
+      const tx = await contract.deleteTokenPriceFeed(tokenAddress);
+      await tx.wait();
+      return { success: true, message: "Token price feed deleted" };
+    } catch (error) {
+      console.error('Error deleting token price feed:', error);
+      throw error;
+    }
+  };
+
 
   /**
    * Gets the allowance of tokens for a given token.
@@ -639,6 +658,7 @@ export const createMemberbeat = async (contractAddress, signer) => {
         return balance;        
     } catch (error) {
         console.error('Error checking balance:', error);
+        throw error;
     }
   };
 
@@ -779,6 +799,7 @@ export const createMemberbeat = async (contractAddress, signer) => {
     updateBillingPlan,
     removeBillingPlan,
     addTokenPriceFeed,
-    updateTokenPriceFeed,          
+    updateTokenPriceFeed,    
+    deleteTokenPriceFeed,     
   };
 };
